@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class CatapultScript : MonoBehaviour
     public Rigidbody ammoBody;
     public Slider forceSlider;
     public Slider angleSlider;
+    public TextMeshProUGUI forceText;
+    public TextMeshProUGUI angleText;
     public Vector3 launchDirection = new Vector3(0, 1, 1);
     public float launchForce = 10f;
     public float rotationSpeed = 100f;
@@ -36,7 +39,7 @@ public class CatapultScript : MonoBehaviour
     void Launch()
     {
         ammoBody.isKinematic = false;
-        launchDirection = turret.forward + Vector3.up;
+        launchDirection = turret.forward * Mathf.Cos(launchAngle) + Vector3.up * Mathf.Sin(launchAngle);
         ammoBody.AddForce(launchDirection.normalized * launchForce, ForceMode.Impulse);
         ammoBody.transform.parent = null;
         armAnimator.SetTrigger("Launch");
@@ -54,6 +57,9 @@ public class CatapultScript : MonoBehaviour
     }
     void HandleSliders()
     {
-        launchForce = 100 * forceSlider.value;
+        launchForce = 20 * forceSlider.value;
+        forceText.text = "Force: " + Mathf.RoundToInt(launchForce);
+        launchAngle = (Mathf.PI / 2) * angleSlider.value;
+        angleText.text = "Angle: " + Mathf.RoundToInt(90 * angleSlider.value);
     }
 }
